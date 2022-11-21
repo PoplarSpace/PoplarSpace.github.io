@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Webpack开发技巧 | Hexo</title>
+  <meta name="description" content="webpack开发技巧使用source map 作用：帮助追踪打包后出现的错误来自打包之前的哪一个源文件。  用法： webpack.config.js 123module.export &#x3D; &amp;#123;    devtool: &amp;#x27;inline-source-map&amp;#x27;,&amp;#125;  随后若有错误可以在控制台看到其来自的源文件。   使用观察者模式可以指示webpack &amp;qu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack开发技巧">
+<meta property="og:url" content="http://example.com/2022/04/06/webpack%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="webpack开发技巧使用source map 作用：帮助追踪打包后出现的错误来自打包之前的哪一个源文件。  用法： webpack.config.js 123module.export &#x3D; &amp;#123;    devtool: &amp;#x27;inline-source-map&amp;#x27;,&amp;#125;  随后若有错误可以在控制台看到其来自的源文件。   使用观察者模式可以指示webpack &amp;qu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-06T12:31:47.238Z">
+<meta property="article:modified_time" content="2022-04-10T08:47:25.599Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Webpack">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://example.com/2022/04/06/webpack%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/PoplarSpace" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">PoplarSpace</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> chongqin,china</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>新手上路请多多关照!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/js%E8%BF%9B%E9%98%B6/">js进阶</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">15</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E5%9F%BA%E7%A1%80/">JS基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E6%A1%86%E6%9E%B6/">JS框架</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E8%BF%9B%E9%98%B6/">JS进阶</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85/">文件打包</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES/" rel="tag">ES</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/" rel="tag">Javascript</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/" rel="tag">Webpack</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/axios/" rel="tag">axios</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AA%E4%BA%BA/" rel="tag">个人</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9/" rel="tag">面试重点</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ES/" style="font-size: 13.4px;">ES</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Javascript/" style="font-size: 14px;">Javascript</a> <a href="/tags/React/" style="font-size: 13.8px;">React</a> <a href="/tags/Webpack/" style="font-size: 13.6px;">Webpack</a> <a href="/tags/axios/" style="font-size: 13px;">axios</a> <a href="/tags/node/" style="font-size: 13.2px;">node</a> <a href="/tags/npm/" style="font-size: 13px;">npm</a> <a href="/tags/%E4%B8%AA%E4%BA%BA/" style="font-size: 13px;">个人</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9/" style="font-size: 13.2px;">面试重点</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/11/21/node.js%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="title">node.js安装与环境配置</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-11-21T14:28:08.631Z" itemprop="datePublished">2022-11-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/js%E8%BF%9B%E9%98%B6/">js进阶</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/09/05/react%20ajax/" class="title">Axios</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-09-05T11:08:08.547Z" itemprop="datePublished">2022-09-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/13/React%E9%9A%8F%E6%89%8B%E8%AE%B0/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-13T09:19:56.344Z" itemprop="datePublished">2022-08-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/26/%E8%A7%A3%E5%86%B3node%E8%A3%85%E5%88%B0Windows%E7%9A%84D%E7%9B%98%E4%B9%8B%E5%90%8Enpm%E6%97%A0%E6%B3%95%E6%AD%A3%E5%B8%B8%E4%BD%BF%E7%94%A8/" class="title">解决node装到Windows的D盘之后npm无法正常使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-26T13:18:45.739Z" itemprop="datePublished">2022-07-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/16/LRU%E9%97%AE%E9%A2%98/" class="title">LRU问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-16T14:09:09.136Z" itemprop="datePublished">2022-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-webpack开发技巧" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Webpack开发技巧
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/04/06/webpack%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" class="article-date">
+	  <time datetime="2022-04-06T12:31:47.238Z" itemprop="datePublished">2022-04-06</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>►<a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85/">文件打包</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Webpack/" rel="tag">Webpack</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/04/06/webpack%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="webpack开发技巧"><a href="#webpack开发技巧" class="headerlink" title="webpack开发技巧"></a><code>webpack</code>开发技巧</h1><h3 id="使用source-map"><a href="#使用source-map" class="headerlink" title="使用source map"></a>使用<code>source map</code></h3><ul>
+<li><p>作用：帮助追踪打包后出现的错误来自打包之前的哪一个源文件。</p>
+</li>
+<li><p>用法：</p>
+<p><code>webpack.config.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.export = &#123;</span><br><span class="line">    devtool: <span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>随后若有错误可以在控制台看到其来自的源文件。</p>
+</li>
+</ul>
+<h3 id="使用观察者模式"><a href="#使用观察者模式" class="headerlink" title="使用观察者模式"></a>使用观察者模式</h3><p>可以指示<code>webpack &quot;watch&quot;</code>依赖所有文件以进行修改。如果其中一个文件更新了，代码将会被重新编译，不需要手动运行整个架构。</p>
+<h5 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h5><p><code>package.json</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">+     <span class="string">&quot;watch&quot;</span>: <span class="string">&quot;webpack --watch&quot;</span>,</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>此时在命令行运行<code>npm run watch</code>就可以砍价<code>webpack</code>编译代码，但是不会退出命令行。这是因为<code>script</code>脚本还在观察文件。</p>
+<p>此时若对源文件进行修改，可以看见<code>webpack</code>自动重新编译修改后的模块。</p>
+<blockquote>
+<p>他的缺点在于如果要看到修改后的实际效果，需要刷新浏览器。因此我们使用<code>webpack-dev-server</code>来解决这个问题。</p>
+</blockquote>
+<h3 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a><code>webpack-dev-server</code></h3><h5 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h5><p>能够实时更新页面。</p>
+<blockquote>
+<p> 当启动<code>webpack-dev-server</code>时，我们的目标文件是看不到编译后的文件的，实时编译后的文件都存储在内存当中。</p>
+</blockquote>
+<h5 id="用法-1"><a href="#用法-1" class="headerlink" title="用法"></a>用法</h5><ul>
+<li><p>安装</p>
+<p><code>npm install --save-dev webpack-dev-server</code></p>
+</li>
+<li><p>修改配置文件，告诉开发器<code>(dev server)</code>在哪里找文件。</p>
+<p><code>webpack.config.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">devServer:&#123;</span><br><span class="line">    <span class="keyword">static</span>: &#123;</span><br><span class="line">        directory: path.join(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">    &#125;,</span><br><span class="line">    compress: <span class="literal">true</span>,</span><br><span class="line">    port: <span class="number">9000</span>,</span><br><span class="line">    hot: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以上配置的意义：在<code>localhost:9000</code>下建立服务，将<code>dist</code>目录中的文件作为可访问文件。</p>
+</blockquote>
+</li>
+<li><p>添加<code>script</code>脚本，可以直接运行开发服务器<code>(dev server)</code></p>
+<p><code>package.json</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;start&quot;</span>: <span class="string">&quot;webpack-dev-server --open&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>现在我们可以在命令行中运行<code>npm start</code>，就可以看到浏览器自动加载页面。如果现在修改和保存任意源文件，<code>web</code>服务器就会自动重新加载编译后的代码。</p>
+<h3 id="webpack-dev-middleware"><a href="#webpack-dev-middleware" class="headerlink" title="webpack-dev-middleware"></a><code>webpack-dev-middleware</code></h3><h5 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h5><p><code>webpack-dev-middleware</code>是一个容器<code>(wrapper)</code>，它可以吧<code>webpack</code>处理后的文件传递给一个服务器<code>(server)</code>。<code>webpack-dev-server</code>在内部使用了它，同时，它也可以作为一个单独的包来使用，以便于更多自定义设置来实现更多的需求。    </p>
+<h5 id="用法-2"><a href="#用法-2" class="headerlink" title="用法"></a>用法</h5><ul>
+<li><p>安装</p>
+<p><code>npm install --save-dev express webpack-dev-middleware</code></p>
+</li>
+<li><p>对于<code>webpack</code>的配置文件做出一些调整</p>
+<p><code>webpack.config.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">+    publicPath; ‘/’</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>publicPath</code>也会在服务器脚本中用到，以确保文件资源能够在<code>http://localhost:3000</code>下访问。当然也需要我们将端口号设置为<code>localhost:3000</code>.</p>
+</blockquote>
+</li>
+<li><p>设置自定义<code>express</code>服务</p>
+<p><code>webpack-demo/server.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compiler = webpack(config);</span><br><span class="line"></span><br><span class="line"><span class="comment">//Tell express to use the webpack-dev-middleware and use the webpack.config.js</span></span><br><span class="line"><span class="comment">//configuration file as a base</span></span><br><span class="line">app.use(webpackDevMiddleware(compiler,&#123;</span><br><span class="line">    publicPath: config.output.publicPath</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">//server the files on part 3000.</span></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!\n&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实际上如果我们同时使用<code>webpack-dev-server</code>和<code>webpack-dev-middleware</code>设置端口号，会优先考虑<code>webpack-dev-server</code>所设置的。</p>
+</blockquote>
+</li>
+<li><p>添加<code>npm script</code></p>
+<p><code>package.json</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;script&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;server&quot;</span>: <span class="string">&quot;node server.js&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>设置<code>npm script</code>的意义在于当我在命令行输入<code>npm server</code>时会调用<code>node server.js</code></p>
+</blockquote>
+<h3 id="webpack-dev-server和webpack-dev-middleware的区别"><a href="#webpack-dev-server和webpack-dev-middleware的区别" class="headerlink" title="webpack-dev-server和webpack-dev-middleware的区别"></a><code>webpack-dev-server</code>和<code>webpack-dev-middleware</code>的区别</h3></li>
+</ul>
+<h5 id="webpack-dev-server-1"><a href="#webpack-dev-server-1" class="headerlink" title="webpack-dev-server"></a><code>webpack-dev-server</code></h5><p><code>webpack-dev-server</code>实际上相当于启动了一个<code>express</code>和<code>Http</code>服务器+调用<code>webpack-dev-middleware</code>。</p>
+<p>它的作用主要是来伺候资源文件。</p>
+<p>这个<code>Http</code>服务器和<code>client</code>使用了<code>websocket</code>通讯协议，原始文件作出改动后，<code>webpack-dev-server</code>会用<code>webpack</code>实时的编译，再用<code>webpack-dev-middleware</code>将<code>webpack</code>编译后文件会输出到内存中。</p>
+<p>适合纯前端项目，很难编写后端服务进行整合。</p>
+<h5 id="webpack-dev-middleware-1"><a href="#webpack-dev-middleware-1" class="headerlink" title="webpack-dev-middleware"></a><code>webpack-dev-middleware</code></h5><p><code>webpack-dev-middleware</code>输出的文件存在于内存中。当我们定义了<code>webpack.config</code>，<code>webpack</code>就能根据此梳理出<code>enrty</code>和<code>output</code>模块的关系脉络，而<code>webpack-dev-middleware</code>在此基础上形成一个文件映射系统，每当应用请求一个文件，他匹配到了就把内存中缓存的对应结果以文件的格式返回给你，反之则进入下一个中间件。</p>
+<p>因为是内存型文件系统，所以重建速度非常快，很适合开发阶段用于静态资源服务器。</p>
+<p>因为<code>webpack</code>可以把任何一种资源都当做是模块来处理，因此能像客户端反馈各种格式的资源，所以可以替代HTTP服务器。</p>
+<p>事实上我们所使用的大部分<code>webpack-dev-server</code>就是一个<code>express+webpack-dev-middleware</code>的实现。</p>
+<blockquote>
+<p>区别在于<code>webpack-dev-server</code>是封装好的，除了<code>webpack.config</code>和命令行参数之外，很难去做定制型开发。<code>webpack-dev-middleware</code>是中间件，可以编写自己的后端服务器然后将它整合过来，相对而言比较灵活。</p>
+</blockquote>
+<h5 id="webpack-hot-middleware"><a href="#webpack-hot-middleware" class="headerlink" title="webpack-hot-middleware"></a><code>webpack-hot-middleware</code></h5><p>是一个结合<code>webpack-dev-middleware</code>使用的<code>middleware</code>,它可以实现浏览器的无刷新更新(<code>hot reloade</code>),这也就是<code>webpack</code>文档里常说的<code>HMR</code>。</p>
+<p>​                                                                                                                                     </p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2022/04/06/webpack%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/" title="Webpack开发技巧" target="_blank" rel="external">http://example.com/2022/04/06/webpack%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/PoplarSpace" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/PoplarSpace" target="_blank"><span class="text-dark">PoplarSpace</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2022/04/10/webpack%E7%83%AD%E6%9B%B4%E6%96%B0HMR/" title="Webpack热更新"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2022/04/01/webpack%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="Webpack资源管理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

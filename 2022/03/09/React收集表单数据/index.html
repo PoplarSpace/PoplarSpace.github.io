@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>React收集表单数据 | Hexo</title>
+  <meta name="description" content="React收集表单数据需求：定义一个包含表单的组件，输入密码后，点击登陆提示输入信息。  非受控组件非受控组件：言简意赅的解释就是，对数据现取现用的组件。输入类型的都属于非受控组件（包括：输入框，勾选内容等等） 接下来我们将完成这个表单提交的组件 1234567891011121314151617class Login extends React.Component&amp;#123;    handle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React收集表单数据">
+<meta property="og:url" content="http://example.com/2022/03/09/React%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="React收集表单数据需求：定义一个包含表单的组件，输入密码后，点击登陆提示输入信息。  非受控组件非受控组件：言简意赅的解释就是，对数据现取现用的组件。输入类型的都属于非受控组件（包括：输入框，勾选内容等等） 接下来我们将完成这个表单提交的组件 1234567891011121314151617class Login extends React.Component&amp;#123;    handle">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/03/08/LH72OVWna3zhoJe.png">
+<meta property="article:published_time" content="2022-03-09T13:49:06.754Z">
+<meta property="article:modified_time" content="2022-03-09T13:50:54.341Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/03/08/LH72OVWna3zhoJe.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://example.com/2022/03/09/React%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/PoplarSpace" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">PoplarSpace</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> chongqin,china</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>新手上路请多多关照!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/js%E8%BF%9B%E9%98%B6/">js进阶</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">15</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E5%9F%BA%E7%A1%80/">JS基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E6%A1%86%E6%9E%B6/">JS框架</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E8%BF%9B%E9%98%B6/">JS进阶</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85/">文件打包</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES/" rel="tag">ES</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/" rel="tag">Javascript</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/" rel="tag">Webpack</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/axios/" rel="tag">axios</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AA%E4%BA%BA/" rel="tag">个人</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9/" rel="tag">面试重点</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ES/" style="font-size: 13.4px;">ES</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Javascript/" style="font-size: 14px;">Javascript</a> <a href="/tags/React/" style="font-size: 13.8px;">React</a> <a href="/tags/Webpack/" style="font-size: 13.6px;">Webpack</a> <a href="/tags/axios/" style="font-size: 13px;">axios</a> <a href="/tags/node/" style="font-size: 13.2px;">node</a> <a href="/tags/npm/" style="font-size: 13px;">npm</a> <a href="/tags/%E4%B8%AA%E4%BA%BA/" style="font-size: 13px;">个人</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9/" style="font-size: 13.2px;">面试重点</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/11/21/node.js%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="title">node.js安装与环境配置</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-11-21T14:28:08.631Z" itemprop="datePublished">2022-11-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/js%E8%BF%9B%E9%98%B6/">js进阶</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/09/05/react%20ajax/" class="title">Axios</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-09-05T11:08:08.547Z" itemprop="datePublished">2022-09-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/13/React%E9%9A%8F%E6%89%8B%E8%AE%B0/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-13T09:19:56.344Z" itemprop="datePublished">2022-08-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/26/%E8%A7%A3%E5%86%B3node%E8%A3%85%E5%88%B0Windows%E7%9A%84D%E7%9B%98%E4%B9%8B%E5%90%8Enpm%E6%97%A0%E6%B3%95%E6%AD%A3%E5%B8%B8%E4%BD%BF%E7%94%A8/" class="title">解决node装到Windows的D盘之后npm无法正常使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-26T13:18:45.739Z" itemprop="datePublished">2022-07-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/16/LRU%E9%97%AE%E9%A2%98/" class="title">LRU问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-16T14:09:09.136Z" itemprop="datePublished">2022-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-React收集表单数据" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      React收集表单数据
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/03/09/React%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/" class="article-date">
+	  <time datetime="2022-03-09T13:49:06.754Z" itemprop="datePublished">2022-03-09</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>►<a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS%E6%A1%86%E6%9E%B6/">JS框架</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Javascript/" rel="tag">Javascript</a>, <a class="article-tag-link-link" href="/tags/React/" rel="tag">React</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/03/09/React%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="React收集表单数据"><a href="#React收集表单数据" class="headerlink" title="React收集表单数据"></a>React收集表单数据</h1><p>需求：定义一个包含表单的组件，输入密码后，点击登陆提示输入信息。</p>
+<p><img src="https://s2.loli.net/2022/03/08/LH72OVWna3zhoJe.png" alt="img"></p>
+<h3 id="非受控组件"><a href="#非受控组件" class="headerlink" title="非受控组件"></a>非受控组件</h3><p>非受控组件：言简意赅的解释就是，对数据现取现用的组件。输入类型的都属于非受控组件（包括：输入框，勾选内容等等）</p>
+<p>接下来我们将完成这个表单提交的组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Login</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</span><br><span class="line">    handleSubmit = <span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">        event.preventDefault();<span class="comment">//阻止表单提交</span></span><br><span class="line">        <span class="keyword">const</span> &#123;username,password&#125; = <span class="built_in">this</span>;</span><br><span class="line">        alert(<span class="string">`你输入的用户名是：<span class="subst">$&#123;username.value&#125;</span>,你输入的密码是<span class="subst">$&#123;password.value&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            &lt;form action=<span class="string">&quot;http://www.atguigu.com&quot;</span> onSubmit=&#123;<span class="built_in">this</span>.handleSubmit&#125;&gt;</span><br><span class="line">            用户名:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">ref</span>=<span class="string">&#123;c</span> =&gt;</span> this.username = c&#125; type=&quot;text&quot; name=&quot;username&quot;/&gt;</span></span><br><span class="line">            密码:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">ref</span>=<span class="string">&#123;c</span> =&gt;</span> this.password = c&#125; type=&quot;password&quot; name=&quot;password&quot;/&gt;</span></span><br><span class="line">            &lt;button&gt;登录&lt;/button&gt;</span><br><span class="line">            &lt;/form&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Login</span>/&gt;</span></span>,<span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>这里涉及到一个新的知识点：<code>eventpreventdefault</code> .</p>
+<p>我们知道，在表单提交之后，会根据获取的url跳转相应的界面，然而实际上大部分时候我们都不希望页面刷新，这样会浪费大量的时间和资源，因此我们利用<code>eventpreventdafault    </code>来阻止页面刷新。</p>
+<blockquote>
+<p><code>onSubmit</code>是提交表单时的操作。</p>
+</blockquote>
+<h3 id="受控组件"><a href="#受控组件" class="headerlink" title="受控组件"></a>受控组件</h3><p>受控组件：将输入内容实时存储在组件状态中，等到需要使用的时候再拿出来。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Login</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</span><br><span class="line">    <span class="comment">//初始化状态</span></span><br><span class="line">    state = &#123;</span><br><span class="line">        username:<span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        password:<span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//保存用户名到状态中</span></span><br><span class="line">    saveUsername = <span class="function">(<span class="params">event</span>) =&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.setState(&#123;<span class="attr">username</span>:event.target.value&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//保存密码到状态中</span></span><br><span class="line">    savePassword= <span class="function">(<span class="params">event</span>) =&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.setState(&#123;<span class="attr">password</span>:event.target.value&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    handleSubmit = <span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">        event.preventDefault();<span class="comment">//阻止表单提交</span></span><br><span class="line">        <span class="keyword">const</span> &#123;username,password&#125; = <span class="built_in">this</span>.state;</span><br><span class="line">        alert(<span class="string">`你输入的用户名是：<span class="subst">$&#123;username&#125;</span>,你输入的密码是<span class="subst">$&#123;password&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            &lt;form action=<span class="string">&quot;http://www.atguigu.com&quot;</span> onSubmit=&#123;<span class="built_in">this</span>.handleSubmit&#125;&gt;</span><br><span class="line">            用户名:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;this.saveUsername&#125;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span>/&gt;</span></span></span><br><span class="line">            密码:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;this.savePassword&#125;</span>  <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span>/&gt;</span></span></span><br><span class="line">            &lt;button&gt;登录&lt;/button&gt;</span><br><span class="line">            &lt;/form&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Login</span>/&gt;</span></span>,<span class="built_in">document</span>.getElementById(<span class="string">&#x27;test&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="高阶函数——函数柯里化"><a href="#高阶函数——函数柯里化" class="headerlink" title="高阶函数——函数柯里化"></a>高阶函数——函数柯里化</h3><p>接着上面的案例，我们继续来优化。</p>
+<p>首先我们发现保存内容到状态中有两个相似函数，我们可以来考虑一下如何将这两个函数写成一个。</p>
+<p>这两个函数内容唯一的不同在于，一个用的是<code>username</code> ，一个用的是<code>password</code>，所以我们把这两个看成参数，写出一个接受表单数据的函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">saveFormdata = <span class="function">(<span class="params">dataType</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//函数的返回结果仍然是一个函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="comment">//这里的`[dataType]`用法参考类的基本方法。</span></span><br><span class="line">        <span class="built_in">this</span>.setState(&#123;[dataType]:event.target.value&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">handleSubmit = <span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">    event.preventDefault();</span><br><span class="line">    <span class="keyword">const</span> &#123;username,password&#125; = <span class="built_in">this</span>.state;</span><br><span class="line">    alert(<span class="string">`你输入的用户名是：<span class="subst">$&#123;username&#125;</span>,你输入的密码是<span class="subst">$&#123;password&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">render</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">       &lt;form action=<span class="string">&quot;http://www.atguigu.com&quot;</span> onSubmit=&#123;<span class="built_in">this</span>.handleSubmit&#125;&gt;</span><br><span class="line">        <span class="comment">//修改函数接收参数</span></span><br><span class="line">        用户名:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;this.saveFormdata(</span>&#x27;<span class="attr">username</span>&#x27;)&#125; <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span>/&gt;</span></span></span><br><span class="line">        密码:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;this.saveFormdata(</span>&#x27;<span class="attr">password</span>&#x27;)&#125;  <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span>/&gt;</span></span></span><br><span class="line">        &lt;button&gt;登录&lt;/button&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">     )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里值得注意的一个问题，现在我们的函数和之前学习事件相关处理时候遇到的问题一样：如果直接再绑定事件时，函数接收参数，那么事件绑定的是函数的返回结果，因此我们需要在<code>saveFormdata</code>中返回一个函数结果。</p>
+<p>这样的写法，我们将<code>saveFormdata</code>称之为高阶函数。</p>
+<p>高阶函数：如果一个函数符合下面两个规范中的任何一个，那该函数就是高阶函数：</p>
+<ul>
+<li>若A函数，接受的参数是一个函数，那么A就可以称之为高阶函数</li>
+<li> 若A函数，调用的返回值依然是一个函数，那么A就可以称之为高阶函数</li>
+</ul>
+<blockquote>
+<p> 常见的高阶函数：<code>Promise</code>,<code>setTimeout</code>,数组身上常用的方法等等</p>
+</blockquote>
+<p>除此之外，还有一个知识点：函数柯里化。</p>
+<p>这里体现在<code>saveFormdata</code>实际上要用到两个参数，但是<code>savaFormdata</code>本身只传了一个，他的返回值又传递了一个<code>event</code>参数。</p>
+<p>这是因为<code>event</code>时<code>react</code>构造的，在函数使用是不能直接传递实参，因此作为形参在<code>return</code>中传递。</p>
+<blockquote>
+<p>简单的来说就是，<code>saveFormdata</code>在使用时，她后面的括号里只能填一个表单数据，而不能填<code>event</code>.</p>
+</blockquote>
+<p>在<code>return</code>返回的函数中，我们希望可以将对应的数据存储在状态中对应的元素中。<code>state</code>此时就像一个类，我们将<code>username，password</code>作为参数传递给<code>dataType</code>,那就会想到直接<code>this.setState(&#123;dataType:event.target.value&#125;)</code>.</p>
+<p>然而，这是错误的写法，我们会发现，对应的数据并没有传递给用户名或者是密码，而是在状态中新建了一个<code>dataType</code>存储我们的输入。</p>
+<p>复习类中元素的读取：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line"><span class="comment">//想要得到&#123;name:&#x27;Tom&#x27;&#125;</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="string">&#x27;name&#x27;</span>;</span><br><span class="line">obj.a = <span class="string">&#x27;Tom&#x27;</span>;<span class="comment">//&#123;a:&#x27;Tom&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//正确写法</span></span><br><span class="line">obj[a] = <span class="string">&#x27;Tom&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>其实就是类似于数组的<code>key:value</code>形式。</p>
+<p>再次回顾一下这个函数，包含了三个重要的知识点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">saveFormdata = <span class="function">(<span class="params">dataType</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//函数的返回结果仍然是一个函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">event</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="comment">//这里的`[dataType]`用法参考类的基本方法。</span></span><br><span class="line">        <span class="built_in">this</span>.setState(&#123;[dataType]:event.target.value&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="不用柯里化的算法"><a href="#不用柯里化的算法" class="headerlink" title="不用柯里化的算法"></a>不用柯里化的算法</h3><p>那么如果要考虑不要柯里化的方式写呢？该如何才能让<code>saveFromdata    </code>自己接受两个参数呢？</p>
+<p>首先我们应该知道，既然<code>onChange</code>需要的是一个函数，那我们就将<code>saveFromdata</code>写在一个箭头函数中赋给<code>onChange</code>。同时，<code>onChange</code>在调用函数的时候，<code>react</code>会产生一个<code>event</code>，正好可以放进箭头函数中作为参数传递给<code>saveFromdata</code>.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">saveFormdata = <span class="function">(<span class="params">dataType,event</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.setState(&#123;[dataType]:event.target.value&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户名:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;(event)</span>=&gt;</span>&#123;this.saveFormdata(&#x27;username&#x27;,event)&#125;&#125; type=&quot;text&quot; name=&quot;username&quot;/&gt;</span></span><br><span class="line">密码:<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;(event)</span>=&gt;</span>&#123;this.saveFormdata(&#x27;password&#x27;,event)&#125;&#125;  type=&quot;password&quot; name=&quot;password&quot;/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这样的话，<code>saveFormdata</code>的返回值就不用再是一个函数了。</p>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2022/03/09/React%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/" title="React收集表单数据" target="_blank" rel="external">http://example.com/2022/03/09/React%E6%94%B6%E9%9B%86%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/PoplarSpace" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/PoplarSpace" target="_blank"><span class="text-dark">PoplarSpace</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2022/03/09/React%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" title="React组件生命周期"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2022/03/06/React%E7%BB%84%E4%BB%B6%E4%B8%89%E5%A4%A7%E5%B1%9E%E6%80%A7%E4%B9%8B%E4%B8%80%E2%80%94%E2%80%94refs/" title="React组件三大属性之一——refs"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
